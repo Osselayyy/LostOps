@@ -45,6 +45,9 @@ jobs:
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
           script: |
             docker pull nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER}
-            docker stop LostOps || true
-            docker rm LostOps || true
+            CONTAINER_ID=$(docker ps -qf "name=LostOps")
+            if [ ! -z "$CONTAINER_ID" ]; then
+                docker stop LostOps
+                docker rm LostOps
+            fi
             docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER}
