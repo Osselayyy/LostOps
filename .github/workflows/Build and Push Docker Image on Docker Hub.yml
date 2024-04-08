@@ -28,4 +28,4 @@ jobs:
         echo "Logging into Docker Hub..."
         echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
         echo "Pushing Docker image..."
-        docker push nsaepitechrennes/yourimage:latest
+        docker push nsaepitechrennes/nsa-800:latest
