@@ -16,19 +16,32 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Build Docker image with date and time tag
+    # Get the latest git tag
+    - name: Get latest tag
+      run: |
+        echo "Getting latest git tag..."
+        VERSION_NUMBER=$(git describe --abbrev=0 --tags)
+        echo "Latest git tag: $VERSION_NUMBER"
+        # Increment the version number
+        VERSION_NUMBER=$(echo $VERSION_NUMBER | awk -F. -v OFS=. '{$NF = $NF + 1;} 1' | sed 's/\. /./')
+        echo "New version number: $VERSION_NUMBER"
+
+    # Build Docker image with version number as tag
     - name: Build Docker image
       run: |
         echo "Building Docker image..."
-        TAG="nsaepitechrennes/sample-app-app:$(date +'%Y%m%d%H%M')"
-        echo "Tagging image with tag: $TAG"
-        docker build -t $TAG .
-        docker tag $TAG $TAG
+        IMAGE_TAG="nsaepitechrennes/sample-app-app:${VERSION_NUMBER}"
+        docker build -t $IMAGE_TAG .
 
-    # Login to Docker Hub and Push Docker image
-    - name: Login to Docker Hub and Push Docker image
+    # Login to Docker Hub
+    - name: Login to Docker Hub
       run: |
         echo "Logging into Docker Hub..."
         echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+    # Push Docker image
+    - name: Push Docker image
+      run: |
         echo "Pushing Docker image..."
-        docker push $TAG  # Utilisation correcte de la variable TAG
+        IMAGE_TAG="nsaepitechrennes/sample-app-app:${VERSION_NUMBER}"
+        docker push $IMAGE_TAG
