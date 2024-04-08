@@ -3,10 +3,10 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main  # Changer en votre branche principale si nécessaire
+      - main
   pull_request:
     branches: 
-      -  main
+      - main
 
 jobs:
   build:
@@ -16,16 +16,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Ajoutez ici les étapes pour la construction de votre image Docker
+    # Build Docker image with date and time tag
     - name: Build Docker image
       run: |
         echo "Building Docker image..."
-        docker build -t nsaepitechrennes/sample-app-app:$(date +'%Y%m%d%H%M') .
+        TAG="nsaepitechrennes/sample-app-app:$(date +'%Y%m%d%H%M')"
+        echo "Tagging image with tag: $TAG"
+        docker build -t $TAG .
+        docker tag $TAG $TAG
 
-    # Ajoutez ici les étapes pour le login à Docker Hub et le poussage de l'image
+    # Login to Docker Hub and Push Docker image
     - name: Login to Docker Hub and Push Docker image
       run: |
         echo "Logging into Docker Hub..."
         echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
         echo "Pushing Docker image..."
-        docker push nsaepitechrennes/sample-app-app:$(date +'%Y%m%d%H%M')
+        docker push $TAG
