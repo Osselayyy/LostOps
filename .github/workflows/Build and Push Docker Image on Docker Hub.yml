@@ -29,3 +29,51 @@ jobs:
         echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
         echo "Pushing Docker image..."
         docker push nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER}
+   
+    # Étape pour exécuter une commande SSH pour le déploiement
+    - name: Run SSH command for deployment
+      uses: appleboy/ssh-action@master
+      with:
+        host: 108.143.171.131
+        username: admuser
+        password: -----BEGIN OPENSSH PRIVATE KEY-----
+            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
+            GAfUigi3U85mY61Ybjpck6apZfs=
+            -----END OPENSSH PRIVATE KEY-----
+        script: |
+            docker pull nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER}
