@@ -30,3 +30,4 @@ php artisan migrate
 ```bash
 php artisan db:seed
 ```
+# je fais juste un test pour voir si mon versionning fonctionne !!
