@@ -35,6 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Set up environment variables
+        run: echo "DOCKER_IMAGE_VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+    
       - name: SSH into server and deploy
         uses: appleboy/ssh-action@master
         with:
@@ -43,11 +46,9 @@ jobs:
           username: admuser
           key: ${{ secrets.SERVER_HOST_SSH }}
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
+
           script: |
-            docker pull nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER}
-            CONTAINER_ID=$(docker ps -qf "name=LostOps")
-            if [ ! -z "$CONTAINER_ID" ]; then
-                docker stop LostOps
-                docker rm LostOps
-            fi
-            docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER}
+            docker pull nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
+            docker stop LostOps
+            docker rm LostOps
+            docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
