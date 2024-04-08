@@ -3,7 +3,8 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main  
+      - main  # Changer en votre branche principale si nécessaire
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,13 +13,22 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Build and push Docker image
+    - name: Display Docker Hub credentials
       run: |
+        echo "DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}"
+        echo "DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}"
+
+    - name: Login to Docker Hub
+      run: |
+        echo "Logging into Docker Hub..."
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker image
+      run: |
+        echo "Building Docker image..."
         docker build -t nsaepitechrennes/yourimage:latest .
+
+    - name: Push Docker image
+      run: |
+        echo "Pushing Docker image..."
         docker push nsaepitechrennes/yourimage:latest
