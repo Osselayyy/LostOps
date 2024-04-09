@@ -46,8 +46,10 @@ jobs:
           username: admuser
           key: ${{ secrets.SERVER_HOST_SSH }}
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
+          export_all_envs: true
 
           script: |
+            echo "$GITHUB_ENV"
             echo "Salut 1"
             docker pull nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
             echo "Salut 2"
