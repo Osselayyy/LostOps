@@ -49,6 +49,6 @@ jobs:
 
           script: |
             docker pull nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
-            docker stop $(docker ps -aqf "name=LostOps") || true
-            docker rm $(docker ps -aqf "name=LostOps") || true
+            docker stop LostOps
+            docker rm LostOps
             docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
