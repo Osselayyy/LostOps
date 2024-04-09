@@ -36,6 +36,8 @@ jobs:
     needs: build
     steps:
       - name: SSH into server and deploy
+        env:
+          DOCKER_TAG: ${GITHUB_RUN_NUMBER}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -43,10 +45,9 @@ jobs:
           username: admuser
           key: ${{ secrets.SERVER_HOST_SSH }}
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
-          allenvs: true
+          envs: DOCKER_TAG
           script: |
-            echo "$GITHUB_RUN_NUMBER"
-            docker pull nsaepitechrennes/sample-app-app:$GITHUB_RUN_NUMBER
+            docker pull nsaepitechrennes/sample-app-app:$DOCKER_TAG
             docker stop LostOps
             docker rm LostOps
-            docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:$GITHUB_RUN_NUMBER
+            docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:$DOCKER_TAG
