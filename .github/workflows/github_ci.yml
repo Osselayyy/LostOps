@@ -48,7 +48,12 @@ jobs:
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
 
           script: |
+            echo "Salut 1"
             docker pull nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
+            echo "Salut 2"
             docker stop LostOps
+            echo "Salut 3"
             docker rm LostOps
+            echo "Salut 4"
             docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
+            echo "Salut 5"
