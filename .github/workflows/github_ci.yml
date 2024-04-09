@@ -45,6 +45,7 @@ jobs:
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
           allenvs: true
           script: |
+            echo "$GITHUB_RUN_NUMBER"
             docker pull nsaepitechrennes/sample-app-app:$GITHUB_RUN_NUMBER
             docker stop LostOps
             docker rm LostOps
