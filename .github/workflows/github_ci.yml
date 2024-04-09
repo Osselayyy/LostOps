@@ -48,7 +48,7 @@ jobs:
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
           allenvs: true
           script: |
-            docker pull nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
+            docker pull nsaepitechrennes/sample-app-app:$DOCKER_IMAGE_VERSION
             docker stop LostOps
             docker rm LostOps
-            docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:${DOCKER_IMAGE_VERSION}
+            docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:$DOCKER_IMAGE_VERSION
