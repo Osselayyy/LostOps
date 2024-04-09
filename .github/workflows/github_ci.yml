@@ -47,6 +47,7 @@ jobs:
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
           envs: DOCKER_TAG
           script: |
+            echo "$DOCKER_TAG"
             docker pull nsaepitechrennes/sample-app-app:$DOCKER_TAG
             docker stop LostOps
             docker rm LostOps
