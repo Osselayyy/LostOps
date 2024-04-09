@@ -34,9 +34,6 @@ jobs:
     name: Deploy to server
     runs-on: ubuntu-latest
     needs: build
-    steps:
-      - name: Set up environment variables
-        run: echo "DOCKER_IMAGE_VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
     
       - name: SSH into server and deploy
         uses: appleboy/ssh-action@master
@@ -48,7 +45,7 @@ jobs:
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
           allenvs: true
           script: |
-            docker pull nsaepitechrennes/sample-app-app:$DOCKER_IMAGE_VERSION
+            docker pull nsaepitechrennes/sample-app-app:$GITHUB_RUN_NUMBER
             docker stop LostOps
             docker rm LostOps
-            docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:$DOCKER_IMAGE_VERSION
+            docker run -d --name LostOps -p 81:80 nsaepitechrennes/sample-app-app:$GITHUB_RUN_NUMBER
