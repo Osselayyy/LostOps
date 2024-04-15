@@ -3,33 +3,49 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main  # Changer en votre branche principale si nécessaire
+      - main
   pull_request:
     branches: 
       -  main
-
 jobs:
+  setup-traefik:
+    name: Setup Traefik
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Start Traefik
+        run: |
+          docker run -d \
+            --name traefik \
+            -p 80:80 \
+            -p 8082:8082 \
+            -v /var/run/docker.sock:/var/run/docker.sock:ro \
+            traefik:v2.4 \
+            --providers.docker=true \
+            --providers.docker.exposedbydefault=false \
+            --entrypoints.web.address=:80 \
+            --entrypoints.metrics.address=:8082 \
+            --metrics.prometheus=true \
+            --metrics.prometheus.entryPoint=metrics
   build:
     runs-on: ubuntu-latest
-
+    needs: setup-traefik
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    # Ajoutez ici les étapes pour la construction de votre image Docker
     - name: Build Docker image
       run: |
         echo "Building Docker image..."
         docker build -t nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER} .
-
-    # Ajoutez ici les étapes pour le login à Docker Hub et le poussage de l'image
     - name: Login to Docker Hub and Push Docker image
       run: |
         echo "Logging into Docker Hub..."
         echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
         echo "Pushing Docker image..."
         docker push nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER}
-   
+        
   deploy:
     name: Deploy to server
     runs-on: ubuntu-latest
@@ -66,4 +82,3 @@ jobs:
               --label "traefik.enable=true" \
               --label "traefik.http.routers.app.rule=Host('localhost')" \
               nsaepitechrennes/sample-app-app:${DOCKER_TAG}
-
