@@ -24,19 +24,23 @@ jobs:
             if docker ps -q -f name=traefik | grep -q .; then
               echo "Traefik is already running."
             else
-              docker run -d \
-                --restart always \
-                --name traefik \
-                -p 80:80 \
-                -p 8082:8082 \
-                -v /var/run/docker.sock:/var/run/docker.sock:ro \
-                traefik:v2.4 \
-                --providers.docker=true \
-                --providers.docker.exposedbydefault=false \
-                --entrypoints.web.address=:80 \
-                --entrypoints.metrics.address=:8082 \
-                --metrics.prometheus=true \
-                --metrics.prometheus.entryPoint=metrics
+              if docker ps -aq -f name=traefik | grep -q .; then
+                docker start traefik
+              else
+                docker run -d \
+                  --restart always \
+                  --name traefik \
+                  -p 80:80 \
+                  -p 8082:8082 \
+                  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+                  traefik:v2.4 \
+                  --providers.docker=true \
+                  --providers.docker.exposedbydefault=false \
+                  --entrypoints.web.address=:80 \
+                  --entrypoints.metrics.address=:8082 \
+                  --metrics.prometheus=true \
+                  --metrics.prometheus.entryPoint=metrics
+              fi
             fi
   Build:
     runs-on: ubuntu-latest
