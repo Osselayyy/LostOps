@@ -22,6 +22,7 @@ jobs:
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
           script: |
             docker run -d \
+              --restart always \
               --name traefik \
               -p 80:80 \
               -p 8082:8082 \
@@ -72,6 +73,7 @@ jobs:
             docker stop LostOps
             docker rm LostOps
             docker run -d \
+              --restart always \
               --name LostOps \
               -p 8081:80 \
               -e APP_DEBUG=true \
