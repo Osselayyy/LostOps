@@ -21,7 +21,9 @@ jobs:
           key: ${{ secrets.SERVER_HOST_SSH }}
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
           script: |
-            if ! docker ps -q -f name=traefik; then
+            if docker ps -q -f name=traefik | grep -q .; then
+              echo "Traefik is already running."
+            else
               docker run -d \
                 --restart always \
                 --name traefik \
