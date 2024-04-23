@@ -109,8 +109,7 @@ jobs:
           key: ${{ secrets.SERVER_HOST_SSH }}
           passphrase: ${{ secrets.SERVER_HOST_SSH_PASSPHRASE }}
           script: |
-            trivy nsaepitechrennes/sample-app-app:${GITHUB_RUN_NUMBER}
-            trivy --only-update ubuntu:18.04
+            trivy fs .
             
       - name: Checkout code
         uses: actions/checkout@v3
