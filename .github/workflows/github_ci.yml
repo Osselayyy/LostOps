@@ -129,13 +129,13 @@ jobs:
               -p 8081:80 \
               -e APP_DEBUG=true \
               -e APP_ENV=prod \
-              -e APP_KEY=base64:DJYTvaRkEZ/YcQsX3TMpB0iCjgme2rhlIOus9A1hnj4= \
+              -e APP_KEY=${{ secrets.APP_KEY }} \
               -e DB_CONNECTION=mysql \
-              -e DB_HOST=app-database799210.westeurope.cloudapp.azure.com \
+              -e DB_HOST=${{ secrets.DB_HOST }} \
               -e DB_PORT=3306 \
-              -e DB_DATABASE=app_database \
-              -e DB_USERNAME=maintainer \
-              -e DB_PASSWORD=snhP1TGxZM \
+              -e DB_DATABASE=${{ secrets.DB_DATABASE }} \
+              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
               --label "traefik.enable=true" \
               --label "traefik.http.routers.app.rule=Host('localhost')" \
               nsaepitechrennes/sample-app-app:${DOCKER_TAG}
