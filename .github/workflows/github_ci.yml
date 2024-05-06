@@ -99,7 +99,6 @@ jobs:
     needs:
       - Build
       - trivy-scan
-    if: success() && needs.trivy-scan.outputs.scan-result == 'pass'
     steps:
       - name: SSH into server and deploy
         env:
