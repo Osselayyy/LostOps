@@ -96,7 +96,7 @@ jobs:
     name: Deploy to server
     runs-on: ubuntu-latest
     needs: Build
-    if: success() # Déploiement conditionnel si le travail précédent (trivy-scan) a réussi
+    if: success() && steps.trivy_scan.outputs.scan-result == 'pass'
     steps:
       - name: SSH into server and deploy
         env:
@@ -130,6 +130,7 @@ jobs:
               --label "traefik.enable=true" \
               --label "traefik.http.routers.app.rule=Host('localhost')" \
               nsaepitechrennes/sample-app-app:${DOCKER_TAG}
+            docker exec LostOps npm i
 
 
 
