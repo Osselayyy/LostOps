@@ -96,7 +96,7 @@ jobs:
     name: Deploy to server
     runs-on: ubuntu-latest
     needs: Build
-    if: success() && steps.trivy_scan.outputs.scan-result == 'pass'
+    if: success() && needs.trivy-scan.outputs.scan-result == 'pass'
     steps:
       - name: SSH into server and deploy
         env:
