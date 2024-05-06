@@ -133,6 +133,7 @@ jobs:
               --label "traefik.http.routers.app.rule=Host('localhost')" \
               nsaepitechrennes/sample-app-app:${DOCKER_TAG}
             docker exec LostOps npm i
+            docker exec LostOps composer install
 
 
 
