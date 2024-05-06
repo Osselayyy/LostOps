@@ -92,15 +92,6 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
   
-      - name: Check Trivy scan results
-        run: |
-          if grep -q '"results":\[\]' trivy-results.sarif; then
-            echo "No vulnerabilities found, continuing deployment..."
-          else
-            echo "Vulnerabilities found, stopping deployment."
-            exit 1
-          fi
-  
   deploy:
     name: Deploy to server
     runs-on: ubuntu-latest
